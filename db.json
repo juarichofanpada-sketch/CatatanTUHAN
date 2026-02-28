@@ -1,0 +1,12 @@
+{
+  "adminPasswords": ["1223334444", "Juaricho12345678", "Andre123#"],
+  "registeredUsers": [
+    {"name": "Juaricho", "pw": "jua2024",   "role": "user", "created": "2024-01-01T00:00:00.000Z"},
+    {"name": "Maria",    "pw": "maria123",  "role": "user", "created": "2024-01-01T00:00:00.000Z"},
+    {"name": "Samuel",   "pw": "sam2024",   "role": "user", "created": "2024-01-01T00:00:00.000Z"},
+    {"name": "Ruth",     "pw": "ruth2024",  "role": "user", "created": "2024-01-01T00:00:00.000Z"}
+  ],
+  "notes": [],
+  "sessions": {},
+  "visitors": []
+}
