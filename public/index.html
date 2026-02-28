@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catatan Tuhan — By Juaricho</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+/* ── THEME VARIABLES ── */
+:root{
+  --gold:#C9A84C;--gold-light:#F0D080;--deep:#0D1B2A;
+  --navy:#1B2A3B;--cream:#F5EDD6;--cream2:#EDE0C0;
+  --white:#FDFAF3;--muted:#7A8598;--accent:#E8734A;
+  --green:#4CAF7C;--red:#E05252;--blue:#4A90D9;
+  --bg:var(--deep);--surface:rgba(255,255,255,.04);--border:rgba(201,168,76,.2);
+  --text:var(--white);--text2:var(--cream2);--text-muted:var(--muted);
+  --card-bg:rgba(255,255,255,.04);--modal-bg:var(--navy);
+  --input-bg:rgba(255,255,255,.07);--nav-bg:rgba(13,27,42,.9);
+  --userbar-bg:rgba(13,27,42,.95);--header-border:rgba(201,168,76,.2);
+}
+[data-theme="light"]{
+  --deep:#F5EFF0;--navy:#FFFFFF;--cream:#2D1B0E;--cream2:#3A2A1A;
+  --white:#1A1008;--muted:#7A6A5A;--bg:#F5EFF0;
+  --surface:rgba(0,0,0,.04);--border:rgba(160,110,40,.25);
+  --text:#1A1008;--text2:#3A2A1A;--text-muted:#8A7A6A;
+  --card-bg:rgba(255,255,255,.9);--modal-bg:#FFFFFF;
+  --input-bg:rgba(255,255,255,.95);--nav-bg:rgba(250,245,235,.95);
+  --userbar-bg:rgba(250,245,235,.97);--header-border:rgba(160,110,40,.2);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Lato',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s;}
+body::before{content:'';position:fixed;inset:0;z-index:0;
+  background:radial-gradient(ellipse at 20% 10%,rgba(201,168,76,.08) 0%,transparent 50%),
+             radial-gradient(ellipse at 80% 90%,rgba(232,115,74,.06) 0%,transparent 50%),
+             url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23C9A84C' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+  pointer-events:none;}
+[data-theme="light"] body::before{background:radial-gradient(ellipse at 20% 10%,rgba(201,168,76,.06) 0%,transparent 50%),radial-gradient(ellipse at 80% 90%,rgba(232,115,74,.04) 0%,transparent 50%);}
+
+/* ── LOADING SCREEN ── */
+#loading-screen{
+  position:fixed;inset:0;z-index:9999;
+  background:linear-gradient(160deg,#050e17,#0d1b2a 60%,#08131f);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity .8s ease,visibility .8s ease;
+}
+#loading-screen.hide{opacity:0;visibility:hidden;pointer-events:none;}
+.sky-scene{position:relative;width:300px;height:280px;margin-bottom:20px;}
+.glow-circle{position:absolute;top:5%;left:50%;transform:translateX(-50%);width:0;height:0;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.55) 0%,rgba(201,168,76,.08) 65%,transparent 100%);animation:glow-expand 3.8s ease forwards;}
+@keyframes glow-expand{0%{width:0;height:0;opacity:0;}25%{opacity:1;}100%{width:260px;height:260px;opacity:.35;}}
+.beam{position:absolute;top:0;left:50%;width:2px;height:100%;background:linear-gradient(180deg,rgba(201,168,76,.5) 0%,transparent 100%);transform-origin:top center;animation:beam-pulse 2s ease-in-out infinite;}
+.beam:nth-child(1){transform:translateX(-50%) rotate(-35deg);animation-delay:0s;}
+.beam:nth-child(2){transform:translateX(-50%) rotate(-17deg);animation-delay:.2s;}
+.beam:nth-child(3){transform:translateX(-50%) rotate(0deg);animation-delay:.4s;}
+.beam:nth-child(4){transform:translateX(-50%) rotate(17deg);animation-delay:.6s;}
+.beam:nth-child(5){transform:translateX(-50%) rotate(35deg);animation-delay:.8s;}
+@keyframes beam-pulse{0%,100%{opacity:.25;}50%{opacity:.9;}}
+.cloud{position:absolute;border-radius:50px;animation:cloud-drift 3.5s ease-in-out infinite;}
+.cloud-1{width:90px;height:20px;background:rgba(255,255,255,.15);top:42%;left:-15px;animation-delay:0s;}
+.cloud-2{width:60px;height:14px;background:rgba(255,255,255,.1);top:58%;right:-5px;animation-delay:.6s;}
+.cloud-3{width:110px;height:18px;background:rgba(255,255,255,.08);top:28%;left:30px;animation-delay:1.2s;}
+@keyframes cloud-drift{0%{opacity:0;transform:translateX(0);}30%{opacity:1;}70%{opacity:1;}100%{opacity:0;transform:translateX(25px);}}
+.star{position:absolute;background:var(--gold-light);border-radius:50%;animation:star-twinkle 1.6s ease-in-out infinite;}
+@keyframes star-twinkle{0%,100%{opacity:0;transform:scale(0);}50%{opacity:1;transform:scale(1);}}
+.jesus-figure{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);animation:jesus-ascend 3.8s ease-in-out forwards;filter:drop-shadow(0 0 18px rgba(201,168,76,.7));}
+@keyframes jesus-ascend{0%{transform:translateX(-50%) translateY(0) scale(1);opacity:1;}55%{transform:translateX(-50%) translateY(-170px) scale(.65);opacity:1;}80%{transform:translateX(-50%) translateY(-240px) scale(.35);opacity:.7;}100%{transform:translateX(-50%) translateY(-280px) scale(.1);opacity:0;}}
+.loading-title{font-family:'Playfair Display',serif;font-size:2rem;color:var(--gold-light);text-align:center;margin-bottom:4px;animation:fadein 1s ease .4s both;}
+.loading-sub{font-size:.82rem;color:#7A8598;letter-spacing:2px;text-transform:uppercase;animation:fadein 1s ease .9s both;text-align:center;}
+.loading-bar{width:190px;height:3px;background:rgba(255,255,255,.1);border-radius:3px;margin-top:18px;overflow:hidden;animation:fadein 1s ease .5s both;}
+.loading-bar-fill{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--accent));border-radius:3px;animation:fill-bar 3.6s ease forwards;}
+@keyframes fill-bar{0%{width:0;}100%{width:100%;}}
+
+/* ── POST-LOGIN LOADING ── */
+#post-login-overlay{
+  position:fixed;inset:0;z-index:8000;
+  background:linear-gradient(160deg,rgba(5,14,23,.98),rgba(13,27,42,.98));
+  display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  animation:fadein .3s ease;
+}
+#post-login-overlay.show{display:flex;}
+.post-login-spinner{width:60px;height:60px;border:3px solid rgba(201,168,76,.2);border-top:3px solid var(--gold);border-radius:50%;animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.post-login-msg{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:1.2rem;text-align:center;}
+.post-login-sub{font-size:.75rem;color:#7A8598;letter-spacing:2px;text-transform:uppercase;}
+.cross-blink{font-size:2rem;color:var(--gold);animation:cross-pulse 1s ease-in-out infinite;}
+@keyframes cross-pulse{0%,100%{opacity:.3;transform:scale(.9);}50%{opacity:1;transform:scale(1.1);}}
+
+/* ── PRIVACY ALERT ── */
+#privacy-alert{display:none;position:fixed;inset:0;z-index:7000;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;}
+#privacy-alert.show{display:flex;animation:fadein .3s ease;}
+.privacy-box{background:var(--modal-bg);border:1px solid rgba(201,168,76,.4);border-radius:20px;padding:36px;max-width:460px;width:100%;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.6);}
+.privacy-box .shield{font-size:3rem;display:block;margin-bottom:12px;}
+.privacy-box h3{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:1.5rem;margin-bottom:10px;}
+.privacy-box p{color:var(--text-muted);font-size:.88rem;line-height:1.7;margin-bottom:8px;}
+.privacy-box .highlight{background:rgba(232,115,74,.12);border:1px solid rgba(232,115,74,.3);border-radius:8px;padding:10px 14px;font-size:.81rem;color:var(--accent);margin:12px 0;line-height:1.6;}
+.btn-privacy-ok{margin-top:16px;padding:12px 30px;background:linear-gradient(135deg,var(--gold),var(--accent));border:none;color:var(--deep);font-size:.9rem;font-weight:700;border-radius:10px;cursor:pointer;font-family:'Lato',sans-serif;}
+
+/* ── ANIMATIONS ── */
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+@keyframes pop-in{from{transform:scale(.88);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* ── VERSE BANNER ── */
+#verse-banner{position:relative;z-index:10;background:linear-gradient(90deg,var(--nav-bg) 0%,rgba(22,32,48,.9) 50%,var(--nav-bg) 100%);border-bottom:1px solid rgba(201,168,76,.3);padding:10px 50px;text-align:center;overflow:hidden;transition:background .3s;}
+[data-theme="light"] #verse-banner{background:linear-gradient(90deg,rgba(240,230,210,.95),rgba(248,242,225,.95));}
+#verse-banner::before{content:'✝';position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:17px;opacity:.6;}
+#verse-banner::after{content:'✝';position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:17px;opacity:.6;}
+#verse-text{font-family:'Playfair Display',serif;font-style:italic;color:var(--gold-light);font-size:.87rem;line-height:1.5;transition:opacity .5s;}
+[data-theme="light"] #verse-text{color:#8B5E1A;}
+#verse-ref{font-size:.72rem;color:var(--text-muted);margin-top:2px;letter-spacing:1px;}
+
+/* ── WITA BAR ── */
+#wita-bar{position:relative;z-index:10;background:rgba(13,27,42,.9);backdrop-filter:blur(10px);border-bottom:1px solid rgba(201,168,76,.15);padding:8px 28px;display:flex;justify-content:space-between;align-items:center;transition:background .3s;}
+[data-theme="light"] #wita-bar{background:rgba(250,245,235,.95);}
+#wita-clock{font-weight:700;font-size:.84rem;color:var(--gold);letter-spacing:2px;}
+#wita-date{font-size:.72rem;color:var(--text-muted);letter-spacing:1px;}
+
+/* ── THEME TOGGLE ── */
+.theme-toggle{background:rgba(255,255,255,.07);border:1px solid rgba(201,168,76,.25);border-radius:20px;padding:5px 12px;cursor:pointer;font-size:.75rem;color:var(--text-muted);font-family:'Lato',sans-serif;transition:all .25s;display:flex;align-items:center;gap:5px;}
+.theme-toggle:hover{border-color:var(--gold);color:var(--gold);}
+[data-theme="light"] .theme-toggle{background:rgba(0,0,0,.06);}
+
+/* ── HEADER ── */
+header{position:relative;z-index:10;padding:34px 30px 24px;text-align:center;border-bottom:1px solid var(--header-border);}
+.logo-cross{font-size:2rem;color:var(--gold);display:block;margin-bottom:6px;filter:drop-shadow(0 0 10px rgba(201,168,76,.4));}
+header h1{font-family:'Playfair Display',serif;font-size:2.7rem;font-weight:700;background:linear-gradient(135deg,var(--gold-light) 0%,var(--gold) 50%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-1px;}
+header p{color:var(--text-muted);font-size:.83rem;margin-top:4px;font-weight:300;letter-spacing:2px;text-transform:uppercase;}
+
+/* ── USER STATUS BAR ── */
+#user-status-bar{display:none;background:linear-gradient(90deg,rgba(201,168,76,.08),rgba(232,115,74,.06));border-bottom:1px solid rgba(201,168,76,.15);padding:8px 28px;position:relative;z-index:10;}
+#user-status-bar.show{display:block;}
+.user-status-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.user-status-info{display:flex;align-items:center;gap:10px;}
+.user-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--accent));display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:var(--deep);}
+.user-status-name{font-size:.84rem;color:var(--text2);font-weight:700;}
+.user-status-role{font-size:.7rem;color:var(--text-muted);}
+.btn-logout{background:rgba(224,82,82,.15);border:1px solid rgba(224,82,82,.3);color:var(--red);padding:5px 11px;border-radius:8px;font-size:.73rem;cursor:pointer;font-family:'Lato',sans-serif;font-weight:700;transition:all .2s;}
+.btn-logout:hover{background:var(--red);color:white;}
+
+/* ── NAV ── */
+nav{position:relative;z-index:10;display:flex;justify-content:center;gap:8px;padding:13px 20px;flex-wrap:wrap;}
+nav button{background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.2);color:var(--text2);padding:8px 17px;border-radius:30px;font-size:.82rem;cursor:pointer;transition:all .25s;font-family:'Lato',sans-serif;letter-spacing:.5px;}
+[data-theme="light"] nav button{background:rgba(0,0,0,.05);}
+nav button:hover,nav button.active{background:var(--gold);color:var(--deep);border-color:var(--gold);font-weight:700;box-shadow:0 4px 20px rgba(201,168,76,.3);}
+
+/* ── LAYOUT ── */
+.main-container{position:relative;z-index:10;max-width:1100px;margin:0 auto;padding:26px 20px;}
+.page{display:none;}
+.page.active{display:block;animation:fadein .4s ease;}
+
+/* ── LOGIN ── */
+#login-page{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:20px;}
+.login-card{background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.25);border-radius:20px;padding:44px;text-align:center;max-width:440px;width:100%;backdrop-filter:blur(10px);box-shadow:0 20px 60px rgba(0,0,0,.4);animation:pop-in .5s ease;}
+[data-theme="light"] .login-card{background:rgba(255,255,255,.85);}
+.login-card .cross{font-size:3rem;color:var(--gold);margin-bottom:13px;display:block;}
+.login-card h2{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--text);margin-bottom:5px;}
+.login-card>p{color:var(--text-muted);font-size:.85rem;margin-bottom:26px;}
+.btn-login-admin{width:100%;padding:14px;background:linear-gradient(135deg,rgba(201,168,76,.15),rgba(232,115,74,.1));border:1.5px solid rgba(201,168,76,.4);color:var(--text);font-size:.94rem;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;font-family:'Lato',sans-serif;font-weight:700;transition:all .25s;letter-spacing:.5px;margin-bottom:8px;}
+.btn-login-admin:hover{background:linear-gradient(135deg,rgba(201,168,76,.28),rgba(232,115,74,.18));box-shadow:0 4px 20px rgba(201,168,76,.25);}
+.admin-login-form{display:none;margin-top:11px;animation:fadein .3s ease;}
+.admin-login-form.show{display:block;}
+.pw-wrap{position:relative;margin-bottom:9px;}
+.admin-login-form input[type="password"],.admin-login-form input[type="text"],
+.guest-login-form input[type="text"],.guest-login-form input[type="password"],
+.register-form input[type="text"],.register-form input[type="password"]{width:100%;padding:12px 42px 12px 15px;background:var(--input-bg);border:1px solid rgba(201,168,76,.3);border-radius:10px;color:var(--text);font-size:.95rem;font-family:'Lato',sans-serif;outline:none;transition:border-color .2s;letter-spacing:2px;text-align:center;}
+.admin-login-form input:focus,.guest-login-form input:focus,.register-form input:focus{border-color:var(--gold);}
+.pw-toggle{position:absolute;right:11px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem;padding:0;}
+.pw-toggle:hover{color:var(--gold);}
+.btn-confirm-admin{width:100%;padding:12px;background:linear-gradient(135deg,var(--gold),var(--accent));border:none;color:var(--deep);font-size:.94rem;border-radius:10px;cursor:pointer;font-weight:700;font-family:'Lato',sans-serif;letter-spacing:.5px;transition:all .25s;}
+.btn-confirm-admin:hover{opacity:.85;transform:translateY(-1px);}
+.pw-error{color:var(--red);font-size:.76rem;margin:5px 0;display:none;}
+.pw-error.show{display:block;}
+.btn-login-user{width:100%;padding:14px;background:transparent;border:1.5px solid var(--blue);color:var(--blue);font-size:.94rem;border-radius:10px;cursor:pointer;font-family:'Lato',sans-serif;font-weight:700;transition:all .25s;letter-spacing:.5px;margin-bottom:8px;}
+.btn-login-user:hover{background:var(--blue);color:white;}
+.btn-login-register{width:100%;padding:14px;background:transparent;border:1.5px solid var(--green);color:var(--green);font-size:.94rem;border-radius:10px;cursor:pointer;font-family:'Lato',sans-serif;font-weight:700;transition:all .25s;letter-spacing:.5px;margin-bottom:8px;}
+.btn-login-register:hover{background:var(--green);color:white;}
+.btn-login-guest{width:100%;padding:14px;background:transparent;border:1.5px solid var(--gold);color:var(--gold);font-size:.94rem;border-radius:10px;cursor:pointer;font-family:'Lato',sans-serif;font-weight:700;transition:all .25s;letter-spacing:.5px;margin-bottom:8px;}
+.btn-login-guest:hover{background:var(--gold);color:var(--deep);}
+.guest-login-form,.register-form{display:none;margin-top:11px;animation:fadein .3s ease;}
+.guest-login-form.show,.register-form.show{display:block;}
+.guest-input-label{font-size:.73rem;font-weight:700;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;display:block;text-align:left;}
+.divider{margin:13px 0;color:var(--text-muted);font-size:.76rem;}
+.forgot-link{font-size:.72rem;color:var(--text-muted);margin-top:8px;display:block;}
+.forgot-link a{color:var(--gold);text-decoration:none;}
+.register-form .form-section-title{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--gold-light);margin:12px 0 8px;text-align:center;}
+
+/* ── NOTES HEADER ── */
+.notes-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;}
+.notes-header h2{font-family:'Playfair Display',serif;font-size:1.75rem;color:var(--text);}
+.notes-header h2 span{color:var(--gold);}
+.btn-add{background:linear-gradient(135deg,var(--gold),var(--accent));border:none;color:var(--deep);padding:10px 20px;border-radius:30px;font-weight:700;font-size:.84rem;cursor:pointer;transition:all .25s;letter-spacing:.5px;display:flex;align-items:center;gap:6px;}
+.btn-add:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(201,168,76,.4);}
+
+/* ── TOOLBAR ── */
+.toolbar{display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap;}
+.search-bar{position:relative;flex:1;min-width:200px;}
+.search-bar input{width:100%;padding:11px 15px 11px 40px;background:var(--input-bg);border:1px solid rgba(201,168,76,.2);border-radius:12px;color:var(--text);font-size:.86rem;font-family:'Lato',sans-serif;outline:none;transition:border-color .2s;}
+.search-bar input:focus{border-color:var(--gold);}
+.search-bar input::placeholder{color:var(--text-muted);}
+.search-bar::before{content:'🔍';position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:.83rem;}
+.sort-select,.filter-select{padding:11px 14px;background:var(--input-bg);border:1px solid rgba(201,168,76,.2);border-radius:12px;color:var(--text2);font-size:.83rem;font-family:'Lato',sans-serif;outline:none;cursor:pointer;transition:border-color .2s;}
+.sort-select:focus,.filter-select:focus{border-color:var(--gold);}
+.sort-select option,.filter-select option{background:var(--modal-bg);}
+
+/* ── FOLDERS ── */
+.folders-bar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
+.folder-btn{background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.18);color:var(--text-muted);padding:6px 14px;border-radius:20px;font-size:.78rem;cursor:pointer;transition:all .2s;font-family:'Lato',sans-serif;}
+.folder-btn:hover,.folder-btn.active{background:rgba(201,168,76,.15);border-color:var(--gold);color:var(--gold);}
+.folder-btn.penting{border-color:rgba(232,115,74,.4);color:var(--accent);}
+.folder-btn.penting.active,.folder-btn.penting:hover{background:rgba(232,115,74,.15);}
+
+/* ── PINNED NOTE ── */
+.pinned-section{margin-bottom:20px;}
+.pinned-label{font-size:.7rem;font-weight:700;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.pinned-label::after{content:'';flex:1;height:1px;background:rgba(201,168,76,.2);}
+.note-card.pinned{border-color:rgba(201,168,76,.5);background:rgba(201,168,76,.05);}
+.note-card.pinned::before{opacity:1;}
+.pin-badge{background:rgba(201,168,76,.15);color:var(--gold);font-size:.62rem;font-weight:700;letter-spacing:1px;padding:2px 7px;border-radius:10px;text-transform:uppercase;margin-left:6px;}
+.note-display-item{font-size:1.6rem;display:block;margin-bottom:8px;}
+
+/* ── NOTES GRID ── */
+.notes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:17px;}
+.note-card{background:var(--card-bg);border:1px solid rgba(201,168,76,.15);border-radius:16px;padding:21px;transition:all .25s;position:relative;overflow:hidden;}
+.note-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--accent));opacity:0;transition:opacity .25s;}
+.note-card:hover{border-color:rgba(201,168,76,.4);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.3);}
+.note-card:hover::before{opacity:1;}
+.note-card-tag{display:inline-block;background:rgba(201,168,76,.12);color:var(--gold);font-size:.69rem;font-weight:700;letter-spacing:1px;padding:3px 9px;border-radius:20px;text-transform:uppercase;margin-bottom:9px;}
+.note-tag-text{background:rgba(76,175,124,.12);color:var(--green);}
+.note-tag-private{background:rgba(74,144,217,.12);color:var(--blue);}
+.note-card h3{font-family:'Playfair Display',serif;font-size:1.08rem;color:var(--text);margin-bottom:7px;line-height:1.4;}
+.note-card .desc{font-size:.8rem;color:var(--text-muted);line-height:1.6;margin-bottom:11px;}
+.note-card-link{display:flex;align-items:center;gap:8px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:8px;padding:8px 12px;text-decoration:none;color:var(--gold);font-size:.79rem;font-weight:700;transition:all .2s;word-break:break-all;}
+.note-card-link:hover{background:rgba(201,168,76,.18);}
+.note-card-text-content{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:8px;padding:9px 12px;font-size:.8rem;color:var(--text2);line-height:1.7;max-height:78px;overflow:hidden;position:relative;}
+.note-card-text-content::after{content:'';position:absolute;bottom:0;left:0;right:0;height:22px;background:linear-gradient(transparent,rgba(27,42,59,.96));}
+[data-theme="light"] .note-card-text-content::after{background:linear-gradient(transparent,rgba(255,255,255,.96));}
+.note-meta{font-size:.7rem;color:rgba(122,133,152,.7);margin-top:9px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.note-card-actions{display:flex;gap:7px;margin-top:9px;justify-content:flex-end;flex-wrap:wrap;}
+.btn-icon{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--text-muted);padding:6px 11px;border-radius:8px;font-size:.73rem;cursor:pointer;transition:all .2s;font-family:'Lato',sans-serif;}
+.btn-icon:hover{background:rgba(224,82,82,.15);color:var(--red);border-color:var(--red);}
+.btn-icon.edit:hover{background:rgba(76,175,124,.15);color:var(--green);border-color:var(--green);}
+.btn-icon.pin:hover{background:rgba(201,168,76,.15);color:var(--gold);border-color:var(--gold);}
+.locked-note{display:flex;align-items:center;gap:6px;background:rgba(74,144,217,.08);border:1px solid rgba(74,144,217,.2);border-radius:8px;padding:8px 12px;font-size:.79rem;color:var(--blue);}
+
+/* ── PAGINATION ── */
+.pagination{display:flex;justify-content:center;align-items:center;gap:7px;margin-top:26px;flex-wrap:wrap;}
+.page-btn{background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.2);color:var(--text2);padding:7px 14px;border-radius:8px;font-size:.81rem;cursor:pointer;transition:all .2s;font-family:'Lato',sans-serif;}
+.page-btn:hover,.page-btn.cur{background:var(--gold);color:var(--deep);font-weight:700;border-color:var(--gold);}
+.page-btn:disabled{opacity:.3;cursor:not-allowed;}
+.page-info{font-size:.78rem;color:var(--text-muted);padding:7px 10px;}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);justify-content:center;align-items:center;padding:20px;}
+.modal-overlay.show{display:flex;animation:fadein .25s ease;}
+.modal{background:var(--modal-bg);border:1px solid rgba(201,168,76,.3);border-radius:20px;padding:34px;width:100%;max-width:540px;box-shadow:0 30px 80px rgba(0,0,0,.6);max-height:92vh;overflow-y:auto;}
+.modal h3{font-family:'Playfair Display',serif;font-size:1.45rem;color:var(--text);margin-bottom:18px;}
+.form-group{margin-bottom:14px;}
+.form-group label{display:block;font-size:.75rem;font-weight:700;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:11px 13px;background:var(--input-bg);border:1px solid rgba(201,168,76,.2);border-radius:10px;color:var(--text);font-size:.87rem;font-family:'Lato',sans-serif;outline:none;transition:border-color .2s;}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--gold);}
+.form-group textarea{min-height:80px;resize:vertical;}
+.form-group select option{background:var(--modal-bg);}
+.field-error{color:var(--red);font-size:.73rem;margin-top:3px;display:none;}
+.field-error.show{display:block;}
+.type-toggle{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.type-btn{flex:1;padding:9px;border-radius:8px;font-size:.81rem;font-weight:700;cursor:pointer;border:1.5px solid rgba(201,168,76,.25);background:transparent;color:var(--text-muted);font-family:'Lato',sans-serif;transition:all .2s;min-width:100px;}
+.type-btn.active{background:rgba(201,168,76,.14);border-color:var(--gold);color:var(--gold);}
+.name-warning{background:rgba(232,115,74,.12);border:1px solid rgba(232,115,74,.3);border-radius:8px;padding:9px 13px;font-size:.79rem;color:var(--accent);display:none;margin-top:5px;line-height:1.5;}
+.name-warning.show{display:block;}
+.modal-btns{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;}
+.btn-cancel{padding:10px 19px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,.15);color:var(--text-muted);font-size:.84rem;cursor:pointer;font-family:'Lato',sans-serif;}
+.btn-cancel:hover{border-color:var(--red);color:var(--red);}
+.btn-save{padding:10px 21px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--accent));border:none;color:var(--deep);font-size:.86rem;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif;letter-spacing:.5px;}
+.btn-save:hover{opacity:.85;}
+.visibility-toggle{display:flex;gap:8px;flex-wrap:wrap;}
+.vis-btn{flex:1;padding:8px;border-radius:8px;font-size:.79rem;font-weight:700;cursor:pointer;border:1.5px solid rgba(255,255,255,.1);background:transparent;color:var(--text-muted);font-family:'Lato',sans-serif;transition:all .2s;min-width:80px;}
+.vis-btn.active.global{background:rgba(232,115,74,.14);border-color:var(--accent);color:var(--accent);}
+.vis-btn.active.private{background:rgba(74,144,217,.14);border-color:var(--blue);color:var(--blue);}
+.vis-btn.active.locked{background:rgba(76,175,124,.14);border-color:var(--green);color:var(--green);}
+
+/* ── UNLOCK MODAL ── */
+#unlock-modal .modal{max-width:380px;}
+.unlock-input{width:100%;padding:12px;background:var(--input-bg);border:1px solid rgba(201,168,76,.3);border-radius:10px;color:var(--text);font-size:1rem;font-family:'Lato',sans-serif;outline:none;text-align:center;letter-spacing:3px;margin-bottom:8px;}
+.unlock-input:focus{border-color:var(--gold);}
+
+/* ── ADMIN ── */
+.admin-header{background:linear-gradient(135deg,rgba(201,168,76,.1),rgba(232,115,74,.07));border:1px solid rgba(201,168,76,.2);border-radius:16px;padding:20px;margin-bottom:22px;display:flex;align-items:center;gap:15px;}
+.admin-badge{background:linear-gradient(135deg,var(--gold),var(--accent));color:var(--deep);font-weight:700;font-size:.7rem;letter-spacing:1px;text-transform:uppercase;padding:3px 11px;border-radius:20px;}
+.admin-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:13px;margin-bottom:22px;}
+.stat-card{background:var(--card-bg);border:1px solid rgba(201,168,76,.15);border-radius:13px;padding:17px;text-align:center;}
+.stat-card .num{font-family:'Playfair Display',serif;font-size:1.9rem;color:var(--gold);font-weight:700;}
+.stat-card .label{font-size:.73rem;color:var(--text-muted);margin-top:3px;text-transform:uppercase;letter-spacing:1px;}
+.admin-table{width:100%;border-collapse:collapse;background:rgba(255,255,255,.02);border-radius:12px;overflow:hidden;}
+.admin-table th{background:rgba(201,168,76,.1);color:var(--gold);font-size:.73rem;letter-spacing:1px;text-transform:uppercase;padding:10px 13px;text-align:left;border-bottom:1px solid rgba(201,168,76,.15);}
+.admin-table td{padding:10px 13px;font-size:.81rem;border-bottom:1px solid rgba(255,255,255,.05);color:var(--text2);}
+.admin-table tr:last-child td{border-bottom:none;}
+.admin-table tr:hover td{background:rgba(201,168,76,.04);}
+.badge-admin{background:rgba(232,115,74,.2);color:var(--accent);padding:2px 8px;border-radius:20px;font-size:.68rem;font-weight:700;}
+.badge-guest{background:rgba(122,133,152,.15);color:var(--text-muted);padding:2px 8px;border-radius:20px;font-size:.68rem;font-weight:700;}
+.badge-user{background:rgba(74,144,217,.2);color:var(--blue);padding:2px 8px;border-radius:20px;font-size:.68rem;font-weight:700;}
+.admin-section{margin-bottom:30px;}
+.admin-section-title{font-family:'Playfair Display',serif;color:var(--text);margin-bottom:13px;font-size:1.15rem;}
+.admin-change-pw{background:var(--card-bg);border:1px solid rgba(201,168,76,.15);border-radius:13px;padding:20px;max-width:420px;margin-bottom:20px;}
+.admin-change-pw h4{font-size:.8rem;font-weight:700;color:var(--text-muted);margin-bottom:12px;letter-spacing:1px;text-transform:uppercase;}
+
+/* ── ABOUT ── */
+.about-hero{text-align:center;padding:34px 20px;border-bottom:1px solid rgba(201,168,76,.15);margin-bottom:34px;}
+.about-hero h2{font-family:'Playfair Display',serif;font-size:1.95rem;color:var(--text);margin:12px 0 7px;}
+.about-hero p{color:var(--text-muted);max-width:470px;margin:0 auto;line-height:1.8;font-size:.88rem;}
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:16px;}
+.feature-card{background:var(--card-bg);border:1px solid rgba(201,168,76,.12);border-radius:13px;padding:20px;text-align:center;}
+.feature-card .icon{font-size:1.7rem;margin-bottom:9px;display:block;}
+.feature-card h4{font-family:'Playfair Display',serif;color:var(--text);margin-bottom:6px;font-size:.97rem;}
+.feature-card p{font-size:.78rem;color:var(--text-muted);line-height:1.6;}
+
+/* ── MISC ── */
+.empty-state{text-align:center;padding:54px 20px;color:var(--text-muted);}
+.empty-state span{font-size:2.6rem;display:block;margin-bottom:11px;opacity:.3;}
+.empty-state p{font-size:.87rem;}
+#toast{position:fixed;bottom:20px;right:20px;z-index:9999;background:var(--modal-bg);border:1px solid var(--gold);color:var(--text);padding:11px 16px;border-radius:12px;font-size:.81rem;box-shadow:0 8px 30px rgba(0,0,0,.4);display:none;max-width:290px;}
+#toast.show{display:block;animation:fadein .3s ease;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:rgba(201,168,76,.3);border-radius:3px;}
+
+/* ── FOOTER ── */
+#site-footer{position:relative;z-index:10;background:rgba(5,10,17,.7);border-top:1px solid rgba(201,168,76,.15);padding:20px 28px;text-align:center;margin-top:40px;}
+[data-theme="light"] #site-footer{background:rgba(240,230,210,.7);}
+.footer-main{font-size:.78rem;color:rgba(201,168,76,.6);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+.footer-meta{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;}
+.footer-item{display:flex;align-items:center;gap:8px;font-size:.75rem;color:var(--text-muted);}
+.footer-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;}
+.footer-icon.user{background:linear-gradient(135deg,var(--gold),var(--accent));color:var(--deep);}
+.footer-icon.claude{background:rgba(201,168,76,.15);color:var(--gold);}
+.footer-icon.google{background:white;}
+
+@media(max-width:600px){
+  header h1{font-size:1.9rem;}
+  .modal{padding:20px 15px;}
+  .login-card{padding:28px 20px;}
+  .toolbar{flex-direction:column;}
+  .sort-select,.filter-select{width:100%;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ INITIAL LOADING SCREEN ══ -->
+<div id="loading-screen">
+  <div class="sky-scene">
+    <div class="glow-circle"></div>
+    <div class="beam"></div><div class="beam"></div><div class="beam"></div>
+    <div class="beam"></div><div class="beam"></div>
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <div class="cloud cloud-3"></div>
+    <div id="stars-container"></div>
+    <div class="jesus-figure">
+      <svg width="68" height="128" viewBox="0 0 68 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="34" cy="13" r="10" stroke="#F0D080" stroke-width="1.8" fill="none" opacity=".92"/>
+        <circle cx="34" cy="17" r="9" fill="#F5EDD6"/>
+        <ellipse cx="34" cy="19" rx="9" ry="10.5" fill="#8B6914" opacity=".55"/>
+        <circle cx="34" cy="17" r="8.2" fill="#F5EDD6"/>
+        <rect x="30.5" y="26" width="7" height="7" rx="3.5" fill="#F5EDD6"/>
+        <path d="M21 47 Q14 68 17 104 Q34 107 51 104 Q54 68 47 47 Q40 55 34 54 Q28 55 21 47Z" fill="white" opacity=".95"/>
+        <rect x="21" y="64" width="26" height="2.5" rx="1.2" fill="#C9A84C" opacity=".65"/>
+        <path d="M21 54 Q9 43 5 34" stroke="white" stroke-width="7.5" stroke-linecap="round" fill="none" opacity=".92"/>
+        <circle cx="5" cy="32" r="4.5" fill="#F5EDD6"/>
+        <path d="M47 54 Q59 43 63 34" stroke="white" stroke-width="7.5" stroke-linecap="round" fill="none" opacity=".92"/>
+        <circle cx="63" cy="32" r="4.5" fill="#F5EDD6"/>
+        <ellipse cx="26" cy="105" rx="5.5" ry="2.8" fill="#F5EDD6" opacity=".75"/>
+        <ellipse cx="42" cy="105" rx="5.5" ry="2.8" fill="#F5EDD6" opacity=".75"/>
+        <circle cx="34" cy="58" r="33" fill="rgba(201,168,76,0.07)" stroke="rgba(201,168,76,0.18)" stroke-width="1"/>
+      </svg>
+    </div>
+  </div>
+  <div class="loading-title">✝ Catatan Tuhan</div>
+  <div class="loading-sub">By Juaricho &nbsp;·&nbsp; Memuat...</div>
+  <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+</div>
+
+<!-- ══ POST-LOGIN LOADING ══ -->
+<div id="post-login-overlay">
+  <div class="cross-blink">✝</div>
+  <div class="post-login-spinner"></div>
+  <div class="post-login-msg" id="post-login-msg">Memuat Catatan Tuhan...</div>
+  <div class="post-login-sub">Selamat Datang</div>
+</div>
+
+<!-- ══ PRIVACY ALERT ══ -->
+<div id="privacy-alert">
+  <div class="privacy-box">
+    <span class="shield">🛡️</span>
+    <h3>Jaga Privasi Anda</h3>
+    <p>Anda berhasil masuk ke <strong>Catatan Tuhan</strong>. Sebelum mulai, harap perhatikan:</p>
+    <div class="highlight">
+      ⚠️ <strong>Jangan menaruh catatan penting atau pribadi di Catatan Global.</strong><br>
+      Catatan Global dapat dilihat oleh semua orang yang mengunjungi situs ini.
+    </div>
+    <p>Gunakan fitur <strong>Catatan Pribadi</strong> untuk menyimpan hal-hal yang sensitif.</p>
+    <button class="btn-privacy-ok" onclick="closePrivacyAlert()">✅ Saya Mengerti</button>
+  </div>
+</div>
+
+<!-- ══ USER STATUS BAR ══ -->
+<div id="user-status-bar">
+  <div class="user-status-inner">
+    <div class="user-status-info">
+      <div class="user-avatar" id="status-avatar">T</div>
+      <div>
+        <div class="user-status-name" id="status-name">—</div>
+        <div class="user-status-role" id="status-role">—</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙 Gelap</button>
+      <button class="btn-logout" onclick="logout()">🚪 Keluar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ VERSE BANNER ══ -->
+<div id="verse-banner">
+  <div id="verse-text">Memuat ayat...</div>
+  <div id="verse-ref"></div>
+</div>
+
+<!-- ══ WITA ══ -->
+<div id="wita-bar">
+  <div>
+    <div id="wita-clock">00:00:00 WITA</div>
+    <div id="wita-date"></div>
+  </div>
+  <div style="font-size:.74rem;color:var(--text-muted);">✝ Catatan Tuhan — By Juaricho</div>
+</div>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <span class="logo-cross">✝</span>
+  <h1>Catatan Tuhan</h1>
+  <p>By Juaricho</p>
+</header>
+
+<!-- ══ NAV ══ -->
+<nav id="main-nav" style="display:none;">
+  <button onclick="showPage('notes')" id="nav-notes" class="active">📂 Semua Catatan</button>
+  <button onclick="showPage('personal')" id="nav-personal">🔒 Catatan Pribadi</button>
+  <button onclick="openAddModal()" id="nav-add">➕ Tambah Catatan</button>
+  <button onclick="showPage('admin')" id="nav-admin" style="display:none;">⚙️ Admin Panel</button>
+  <button onclick="showPage('about')" id="nav-about">✝ Tentang</button>
+</nav>
+
+<div class="main-container">
+
+  <!-- ── PAGE: LOGIN ── -->
+  <div id="page-login" class="page active">
+    <div id="login-page">
+      <div class="login-card">
+        <span class="cross">✝</span>
+        <h2>Selamat Datang</h2>
+        <p>Catatan Tuhan — kumpulkan &amp; bagikan berkat lewat catatan dan link Drive</p>
+
+        <!-- Admin Login -->
+        <button class="btn-login-admin" onclick="toggleAdminForm()">
+          👑 Masuk sebagai Admin
+        </button>
+        <div class="admin-login-form" id="admin-login-form">
+          <div class="pw-wrap" style="margin-top:10px;">
+            <input type="password" id="admin-pw-input" placeholder="Sandi Admin" maxlength="40"
+              onkeydown="if(event.key==='Enter')confirmAdmin()">
+            <button class="pw-toggle" onclick="togglePwVisibility('admin-pw-input','pw-eye-btn')" id="pw-eye-btn">👁️</button>
+          </div>
+          <div class="pw-error" id="pw-error">❌ Sandi salah. Coba lagi.</div>
+          <button class="btn-confirm-admin" onclick="confirmAdmin()">🔓 Masuk Admin</button>
+        </div>
+
+        <div class="divider">— atau —</div>
+
+        <!-- Masuk Akun Terdaftar -->
+        <button class="btn-login-user" onclick="toggleUserLoginForm()">
+          👤 Masuk Akun Terdaftar
+        </button>
+        <div class="guest-login-form" id="user-login-form">
+          <span class="guest-input-label" style="margin-top:10px;">Nama Pengguna</span>
+          <div class="pw-wrap">
+            <input type="text" id="user-login-name" placeholder="Nama Anda" maxlength="40"
+              onkeydown="if(event.key==='Enter')confirmUserLogin()">
+          </div>
+          <span class="guest-input-label">Sandi</span>
+          <div class="pw-wrap">
+            <input type="password" id="user-login-pw" placeholder="Sandi Anda" maxlength="40"
+              onkeydown="if(event.key==='Enter')confirmUserLogin()">
+            <button class="pw-toggle" onclick="togglePwVisibility('user-login-pw','user-eye-btn')" id="user-eye-btn">👁️</button>
+          </div>
+          <div class="pw-error" id="user-pw-error">❌ Nama atau sandi salah.</div>
+          <button class="btn-confirm-admin" style="margin-top:4px;" onclick="confirmUserLogin()">🔓 Masuk</button>
+          <span class="forgot-link">Lupa sandi? Hubungi admin via
+            <a href="https://wa.me/6282162839250" target="_blank">WhatsApp</a>
+          </span>
+        </div>
+
+        <!-- Daftar Akun Baru -->
+        <button class="btn-login-register" onclick="toggleRegisterForm()">
+          📝 Daftar Akun Baru
+        </button>
+        <div class="register-form" id="register-form">
+          <div class="register-form form-section-title">✝ Buat Akun Baru</div>
+          <span class="guest-input-label">Nama Pengguna</span>
+          <div class="pw-wrap">
+            <input type="text" id="reg-new-name" placeholder="Nama Anda" maxlength="40"
+              onkeydown="if(event.key==='Enter')document.getElementById('reg-new-pw').focus()">
+          </div>
+          <span class="guest-input-label">Buat Sandi</span>
+          <div class="pw-wrap">
+            <input type="password" id="reg-new-pw" placeholder="Min. 4 karakter" maxlength="40"
+              onkeydown="if(event.key==='Enter')document.getElementById('reg-new-pw-confirm').focus()">
+            <button class="pw-toggle" onclick="togglePwVisibility('reg-new-pw','reg-eye-btn')" id="reg-eye-btn">👁️</button>
+          </div>
+          <span class="guest-input-label">Konfirmasi Sandi</span>
+          <div class="pw-wrap">
+            <input type="password" id="reg-new-pw-confirm" placeholder="Ulangi sandi" maxlength="40"
+              onkeydown="if(event.key==='Enter')confirmRegister()">
+          </div>
+          <div class="pw-error" id="register-error">❌ Terjadi kesalahan.</div>
+          <button class="btn-confirm-admin" style="margin-top:4px;background:linear-gradient(135deg,var(--green),var(--blue));" onclick="confirmRegister()">✅ Daftar & Masuk</button>
+        </div>
+
+        <div class="divider">— atau —</div>
+
+        <!-- Guest Login -->
+        <button class="btn-login-guest" onclick="loginGuest()">
+          🌐 Lanjut sebagai Tamu (Lihat Global)
+        </button>
+        <p style="font-size:.68rem;color:rgba(122,133,152,.5);margin-top:13px;">
+          Tamu hanya bisa melihat catatan global. Pengguna terdaftar bisa melihat catatan pribadi mereka.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PAGE: ALL NOTES (Global) ── -->
+  <div id="page-notes" class="page">
+    <div class="notes-header">
+      <h2>📂 Semua <span>Catatan Global</span></h2>
+      <button class="btn-add" onclick="openAddModal('global')">✚ Tambah Catatan</button>
+    </div>
+    <div class="folders-bar" id="folders-global">
+      <span style="font-size:.7rem;color:var(--text-muted);font-weight:700;letter-spacing:1px;">📁 FOLDER:</span>
+      <button class="folder-btn active" onclick="setFolder('global','Semua')" data-folder="Semua">📂 Semua</button>
+      <button class="folder-btn penting" onclick="setFolder('global','Penting')" data-folder="Penting">⭐ Penting</button>
+      <button class="folder-btn" onclick="setFolder('global','Umum')" data-folder="Umum">📌 Umum</button>
+      <button class="folder-btn" onclick="setFolder('global','Ibadah')" data-folder="Ibadah">🙏 Ibadah</button>
+      <button class="folder-btn" onclick="setFolder('global','Alkitab')" data-folder="Alkitab">📖 Alkitab</button>
+      <button class="folder-btn" onclick="setFolder('global','Renungan')" data-folder="Renungan">✝ Renungan</button>
+      <button class="folder-btn" onclick="setFolder('global','Musik')" data-folder="Musik">🎵 Musik</button>
+    </div>
+    <div class="toolbar">
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Cari judul, nama, atau isi..." oninput="onFilterChange('global')">
+      </div>
+      <select class="sort-select" id="sort-select" onchange="onFilterChange('global')">
+        <option value="newest">🕐 Terbaru</option>
+        <option value="oldest">🕑 Terlama</option>
+        <option value="az">🔤 A–Z</option>
+        <option value="za">🔤 Z–A</option>
+      </select>
+    </div>
+    <div id="pinned-section-global" class="pinned-section"></div>
+    <div class="notes-grid" id="notes-grid-global"></div>
+    <div class="pagination" id="pagination-global"></div>
+  </div>
+
+  <!-- ── PAGE: PERSONAL NOTES ── -->
+  <div id="page-personal" class="page">
+    <div class="notes-header">
+      <h2>🔒 Catatan <span>Pribadi</span></h2>
+      <button class="btn-add" onclick="openAddModal('personal')">✚ Tambah Catatan Pribadi</button>
+    </div>
+    <div id="personal-locked-msg" style="display:none;text-align:center;padding:30px;color:var(--text-muted);">
+      <div style="font-size:2.5rem;margin-bottom:12px;">🔐</div>
+      <p>Login sebagai pengguna terdaftar untuk melihat catatan pribadi.</p>
+    </div>
+    <div id="personal-content" style="display:none;">
+      <div class="folders-bar" id="folders-personal">
+        <span style="font-size:.7rem;color:var(--text-muted);font-weight:700;letter-spacing:1px;">📁 FOLDER:</span>
+        <button class="folder-btn active" onclick="setFolder('personal','Semua')" data-folder="Semua">📂 Semua</button>
+        <button class="folder-btn penting" onclick="setFolder('personal','Penting')" data-folder="Penting">⭐ Penting</button>
+        <button class="folder-btn" onclick="setFolder('personal','Umum')" data-folder="Umum">📌 Umum</button>
+        <button class="folder-btn" onclick="setFolder('personal','Ibadah')" data-folder="Ibadah">🙏 Ibadah</button>
+        <button class="folder-btn" onclick="setFolder('personal','Alkitab')" data-folder="Alkitab">📖 Alkitab</button>
+        <button class="folder-btn" onclick="setFolder('personal','Renungan')" data-folder="Renungan">✝ Renungan</button>
+      </div>
+      <div class="toolbar">
+        <div class="search-bar">
+          <input type="text" id="search-personal" placeholder="Cari catatan pribadi..." oninput="onFilterChange('personal')">
+        </div>
+        <select class="sort-select" id="sort-personal" onchange="onFilterChange('personal')">
+          <option value="newest">🕐 Terbaru</option>
+          <option value="oldest">🕑 Terlama</option>
+          <option value="az">🔤 A–Z</option>
+          <option value="za">🔤 Z–A</option>
+        </select>
+      </div>
+      <div class="notes-grid" id="notes-grid-personal"></div>
+      <div class="pagination" id="pagination-personal"></div>
+    </div>
+  </div>
+
+  <!-- ── PAGE: ADMIN ── -->
+  <div id="page-admin" class="page">
+    <div class="admin-header">
+      <span style="font-size:1.8rem;">⚙️</span>
+      <div>
+        <span class="admin-badge">Admin Panel</span>
+        <h2 style="font-family:'Playfair Display',serif;color:var(--text);margin-top:5px;">Manajemen Catatan Tuhan</h2>
+      </div>
+    </div>
+    <div class="admin-stats" id="admin-stats"></div>
+
+    <div class="admin-section">
+      <h3 class="admin-section-title">📋 Semua Catatan</h3>
+      <div style="overflow-x:auto;">
+        <table class="admin-table">
+          <thead><tr><th>#</th><th>Judul</th><th>Tipe</th><th>Visibilitas</th><th>Nama Pengisi</th><th>Tanggal</th><th>Aksi</th></tr></thead>
+          <tbody id="admin-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h3 class="admin-section-title">👥 Pengguna Terdaftar</h3>
+      <div style="overflow-x:auto;margin-bottom:16px;">
+        <table class="admin-table">
+          <thead><tr><th>Nama</th><th>Role</th><th>Login Terakhir</th><th>Aksi</th></tr></thead>
+          <tbody id="registered-tbody"></tbody>
+        </table>
+      </div>
+      <div class="admin-change-pw">
+        <h4>➕ Tambah / Ubah Sandi Pengguna</h4>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label>Nama Pengguna</label>
+          <input type="text" id="reg-name" placeholder="Nama pengguna">
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label>Sandi Baru</label>
+          <input type="password" id="reg-pw" placeholder="Sandi baru">
+        </div>
+        <div id="reg-msg" style="font-size:.77rem;margin-bottom:8px;display:none;"></div>
+        <button class="btn-save" onclick="adminSetUserPw()" style="width:100%;">💾 Simpan Pengguna</button>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h3 class="admin-section-title">📌 Catatan yang Disematkan</h3>
+      <div style="overflow-x:auto;">
+        <table class="admin-table">
+          <thead><tr><th>Judul</th><th>Disematkan Pada</th><th>Aksi</th></tr></thead>
+          <tbody id="pinned-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h3 class="admin-section-title">🔐 Ubah Sandi Admin</h3>
+      <div class="admin-change-pw">
+        <h4>Ganti salah satu sandi admin</h4>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label>Sandi Saat Ini (salah satu dari 3 sandi)</label>
+          <input type="password" id="pw-current" placeholder="Sandi yang ingin diubah">
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label>Sandi Baru</label>
+          <input type="password" id="pw-new" placeholder="Sandi baru">
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label>Konfirmasi Sandi Baru</label>
+          <input type="password" id="pw-confirm" placeholder="Ulangi sandi baru">
+        </div>
+        <div id="pw-change-msg" style="font-size:.77rem;margin-bottom:9px;display:none;"></div>
+        <button class="btn-save" onclick="changeAdminPassword()" style="width:100%;">🔑 Simpan Sandi Baru</button>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h3 class="admin-section-title">👁️ Pengunjung / Tamu</h3>
+      <div style="overflow-x:auto;">
+        <table class="admin-table">
+          <thead><tr><th>Nama</th><th>Role</th><th>Login Terakhir</th></tr></thead>
+          <tbody id="users-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PAGE: ABOUT ── -->
+  <div id="page-about" class="page">
+    <div class="about-hero">
+      <span class="logo-cross" style="font-size:3.4rem;">✝</span>
+      <h2>Catatan Tuhan</h2>
+      <p>Platform berbagi catatan &amp; link Google Drive yang dibangun di atas fondasi iman Kristen. Setiap catatan adalah berkat untuk komunitas. — By Juaricho</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card"><span class="icon">📂</span><h4>Link Google Drive</h4><p>Simpan dan bagikan link Google Drive dengan judul dan deskripsi yang jelas.</p></div>
+      <div class="feature-card"><span class="icon">📝</span><h4>Catatan Teks Bebas</h4><p>Tambah catatan teks biasa tanpa link — cukup tulis dan simpan.</p></div>
+      <div class="feature-card"><span class="icon">🔒</span><h4>Catatan Pribadi</h4><p>Pengguna terdaftar bisa membuat catatan yang hanya bisa dilihat oleh diri sendiri.</p></div>
+      <div class="feature-card"><span class="icon">🌐</span><h4>Catatan Global</h4><p>Catatan yang bisa dilihat oleh semua pengunjung, termasuk tamu.</p></div>
+      <div class="feature-card"><span class="icon">📌</span><h4>Catatan Disematkan</h4><p>Admin bisa menyematkan catatan penting agar muncul paling atas.</p></div>
+      <div class="feature-card"><span class="icon">🔐</span><h4>Catatan Berkunci</h4><p>Catatan yang dilindungi sandi — hanya yang tahu kunci bisa membuka isi.</p></div>
+      <div class="feature-card"><span class="icon">✝</span><h4>Firman Tuhan</h4><p>Ditemani ayat Alkitab terkenal yang berganti setiap 30 detik.</p></div>
+      <div class="feature-card"><span class="icon">🌙☀️</span><h4>Tema Gelap &amp; Terang</h4><p>Pilih tampilan sesuai kenyamanan Anda — gelap atau terang.</p></div>
+    </div>
+  </div>
+
+</div><!-- /main-container -->
+
+<!-- ══ FOOTER ══ -->
+<footer id="site-footer">
+  <div class="footer-main">🛡️ ADMIN TIDAK TERTARIK DENGAN DATA ANDA</div>
+  <div class="footer-meta">
+    <div class="footer-item">
+      <div class="footer-icon user">J</div>
+      <span>Dibuat oleh <strong>Juaricho</strong></span>
+    </div>
+    <div class="footer-item">
+      <div class="footer-icon claude">✦</div>
+      <span>Didukung oleh <strong>Claude</strong></span>
+    </div>
+  </div>
+  <div style="margin-top:10px;font-size:.68rem;color:rgba(122,133,152,.4);">Terima kasih Guys 🙏</div>
+</footer>
+
+<!-- ══ ADD/EDIT MODAL ══ -->
+<div class="modal-overlay" id="note-modal">
+  <div class="modal">
+    <h3 id="modal-title">✚ Tambah Catatan Baru</h3>
+    <div class="form-group">
+      <label>Nama Pengisi <span style="color:var(--red)">*</span></label>
+      <input type="text" id="note-author" placeholder="Nama asli Anda" maxlength="60" oninput="checkAuthorName()">
+      <div class="name-warning" id="name-warning">⚠️ Nama tampaknya diisi sembarangan. Mohon isi dengan nama asli.</div>
+      <div class="field-error" id="author-error">Nama pengisi wajib diisi.</div>
+    </div>
+    <div id="type-toggle-wrap">
+      <label style="display:block;font-size:.75rem;font-weight:700;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;">Tipe Catatan</label>
+      <div class="type-toggle">
+        <button class="type-btn active" id="type-btn-drive" onclick="setNoteType('drive')">🔗 Link Drive</button>
+        <button class="type-btn" id="type-btn-text" onclick="setNoteType('text')">📝 Teks</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Judul Catatan <span style="color:var(--red)">*</span></label>
+      <input type="text" id="note-title" placeholder="Tulis judul catatan..." maxlength="120">
+      <div class="field-error" id="title-error">Judul wajib diisi.</div>
+    </div>
+    <div class="form-group">
+      <label>Display Item (Ikon)</label>
+      <input type="text" id="note-display-item" placeholder="Contoh: 📖 atau 🎵 atau 🙏 (opsional)" maxlength="10">
+    </div>
+    <div id="drive-fields">
+      <div class="form-group">
+        <label>Link Google Drive <span style="color:var(--red)">*</span></label>
+        <input type="url" id="note-link" placeholder="https://drive.google.com/...">
+        <div class="field-error" id="link-error">Link harus diawali dengan https://</div>
+      </div>
+    </div>
+    <div id="text-fields" style="display:none;">
+      <div class="form-group">
+        <label>Isi Catatan <span style="color:var(--red)">*</span></label>
+        <textarea id="note-content" placeholder="Tulis isi catatan Anda di sini..."></textarea>
+        <div class="field-error" id="content-error">Isi catatan wajib diisi.</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Deskripsi / Keterangan</label>
+      <textarea id="note-desc" placeholder="Keterangan singkat (opsional)..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Kategori / Folder</label>
+      <select id="note-cat">
+        <option value="Umum">📌 Umum</option>
+        <option value="Penting">⭐ Penting</option>
+        <option value="Ibadah">🙏 Ibadah</option>
+        <option value="Alkitab">📖 Alkitab</option>
+        <option value="Renungan">✝ Renungan</option>
+        <option value="Musik">🎵 Musik Rohani</option>
+        <option value="Lainnya">📂 Lainnya</option>
+      </select>
+    </div>
+    <div class="form-group" id="visibility-wrap">
+      <label>Visibilitas</label>
+      <div class="visibility-toggle">
+        <button class="vis-btn active global" id="vis-global" onclick="setVisibility('global')">🌐 Global</button>
+        <button class="vis-btn private" id="vis-private" onclick="setVisibility('private')">🔒 Pribadi</button>
+        <button class="vis-btn locked" id="vis-locked" onclick="setVisibility('locked')">🔐 Berkunci</button>
+      </div>
+    </div>
+    <div class="form-group" id="lock-pw-wrap" style="display:none;">
+      <label>Sandi Kunci Catatan</label>
+      <input type="text" id="note-lock-pw" placeholder="Buat sandi untuk catatan ini..." maxlength="30">
+      <div style="font-size:.71rem;color:var(--text-muted);margin-top:4px;">💡 Bagikan sandi ini kepada orang yang boleh membaca catatan.</div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">Batal</button>
+      <button class="btn-save" onclick="saveNote()">💾 Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ UNLOCK MODAL ══ -->
+<div class="modal-overlay" id="unlock-modal">
+  <div class="modal">
+    <h3>🔐 Catatan Berkunci</h3>
+    <p style="font-size:.84rem;color:var(--text-muted);margin-bottom:16px;">Masukkan sandi untuk membaca isi catatan.</p>
+    <input class="unlock-input" type="password" id="unlock-input" placeholder="Masukkan sandi..." maxlength="30" onkeydown="if(event.key==='Enter')confirmUnlock()">
+    <div class="pw-error" id="unlock-error">❌ Sandi salah. Coba lagi.</div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeUnlockModal()">Batal</button>
+      <button class="btn-save" onclick="confirmUnlock()">🔓 Buka</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TOAST ══ -->
+<div id="toast"></div>
+
+<!-- ══ APP SCRIPT (dipisah untuk GitHub) ══ -->
+<script src="app.js"></script>
+
+</body>
+</html>
